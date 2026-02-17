@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>山海三日 · 手机随身版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f4f2ed;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.5;
+            color: #1d342f;
+            padding: 16px 14px 32px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* 页眉 */
+        .header {
+            background: linear-gradient(145deg, #d4e4db, #c2d6cb);
+            padding: 24px 22px;
+            border-radius: 32px 32px 32px 32px;
+            margin-bottom: 24px;
+            border: 1px solid #b2ccc0;
+            box-shadow: 0 6px 12px rgba(40, 70, 60, 0.08);
+        }
+
+        .header h1 {
+            font-size: 2.4rem;
+            font-weight: 400;
+            color: #164b47;
+            line-height: 1.1;
+            margin-bottom: 6px;
+        }
+
+        .header h1 strong {
+            font-weight: 700;
+            color: #c65d2e;
+        }
+
+        .subhead {
+            font-size: 1.1rem;
+            color: #296157;
+            border-left: 6px solid #c65d2e;
+            padding-left: 16px;
+            margin: 8px 0 18px 0;
+            background: rgba(255,255,255,0.3);
+            border-radius: 0 30px 30px 0;
+        }
+
+        .summary {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px 20px;
+            background: rgba(255,255,250,0.8);
+            border-radius: 36px;
+            padding: 16px 20px;
+            border: 1px solid #aec3b8;
+            font-size: 0.98rem;
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .summary-icon {
+            font-size: 1.8rem;
+        }
+
+        /* 每日卡片 */
+        .day-card {
+            background: white;
+            border-radius: 36px;
+            padding: 24px 22px;
+            margin-bottom: 28px;
+            border: 1px solid #ddcdb7;
+            box-shadow: 0 10px 20px rgba(0, 30, 20, 0.05);
+        }
+
+        .day-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .day-badge {
+            background: #9b7c5d;
+            color: white;
+            font-weight: 600;
+            font-size: 1.6rem;
+            padding: 6px 22px;
+            border-radius: 50px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 0 #624d38;
+        }
+
+        .day-route {
+            font-size: 1.7rem;
+            font-weight: 350;
+            color: #195e5a;
+        }
+
+        .day-route span {
+            font-weight: 300;
+            color: #c65d2e;
+            margin: 0 4px;
+        }
+
+        /* 时间线 针对手机优化：小屏幕时时间换行 */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .timeline-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 6px 12px;
+            border-bottom: 1px dashed #dacdbb;
+            padding-bottom: 12px;
+        }
+
+        .time {
+            font-weight: 700;
+            color: #b45a2a;
+            font-size: 1.15rem;
+            min-width: 80px;
+        }
+
+        .desc {
+            flex: 1;
+            font-size: 1rem;
+        }
+
+        .desc strong {
+            color: #176e73;
+            font-weight: 600;
+        }
+
+        .chip {
+            background: #eae3d7;
+            display: inline-block;
+            padding: 3px 14px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            color: #3f5f57;
+            margin: 4px 6px 0 0;
+            white-space: nowrap;
+        }
+
+        .parking-chip {
+            background: #daeae2;
+            border: 1px dashed #2f8679;
+            display: inline-block;
+            padding: 3px 14px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            margin: 4px 6px 0 0;
+        }
+
+        /* 分组展示 (第二天) 手机版堆叠 */
+        .split-box {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin: 18px 0 12px;
+        }
+
+        .split-a, .split-b {
+            background: #f6f2ea;
+            border-radius: 28px;
+            padding: 20px;
+            border: 2px solid #d2c1ab;
+        }
+
+        .split-a {
+            border-left: 8px solid #588b99;
+        }
+
+        .split-b {
+            border-left: 8px solid #cf8f5e;
+        }
+
+        .split-a h4, .split-b h4 {
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: #195551;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .split-a ul, .split-b ul {
+            margin-left: 20px;
+            list-style-type: '✨ ';
+        }
+
+        .split-a li, .split-b li {
+            margin-bottom: 6px;
+        }
+
+        /* 手绘示意图网格 手机每行2个 */
+        .sketch-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin: 25px 0 18px;
+        }
+
+        .sketch-card {
+            background: #f1ede5;
+            border-radius: 26px;
+            padding: 18px 8px;
+            text-align: center;
+            border: 2px solid #cdbba5;
+            box-shadow: 4px 4px 0 #b7a389;
+        }
+
+        .sketch-emoji {
+            font-size: 2.8rem;
+            line-height: 1.2;
+        }
+
+        .sketch-title {
+            font-weight: 600;
+            color: #175e5b;
+            border-bottom: 2px dotted #c65d2e;
+            display: inline-block;
+            padding-bottom: 5px;
+            margin: 8px 0 4px;
+            font-size: 1.1rem;
+        }
+
+        .sketch-desc {
+            font-size: 0.85rem;
+            color: #4c635b;
+            background: #fffcf5;
+            border-radius: 30px;
+            padding: 4px 8px;
+            margin: 6px 8px 0;
+        }
+
+        /* 地点标签 */
+        .location-bar {
+            background: #e3e3d5;
+            border-radius: 40px;
+            padding: 14px 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            border: 1px solid #b9aa95;
+            margin-top: 10px;
+        }
+
+        .loc-tag {
+            background: white;
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: #1e5d50;
+            border: 1px solid #9eb6aa;
+        }
+
+        /* 备忘录 */
+        .memo {
+            background: #e1e6da;
+            border-radius: 36px;
+            padding: 24px;
+            margin: 20px 0 10px;
+            border: 1px solid #b2c3b2;
+        }
+
+        .memo h3 {
+            font-weight: 400;
+            color: #195e4f;
+            margin-bottom: 18px;
+            font-size: 1.4rem;
+        }
+
+        .memo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px 20px;
+        }
+
+        .memo-item {
+            list-style: none;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .memo-item::before {
+            content: "✔️";
+            color: #328f7c;
+            font-size: 1.1rem;
+        }
+
+        .footer {
+            text-align: center;
+            color: #6b8980;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            border-top: 2px solid #ccd9d0;
+            padding-top: 20px;
+        }
+
+        /* 小屏幕微调 */
+        @media (max-width: 420px) {
+            .header h1 { font-size: 2.2rem; }
+            .day-badge { font-size: 1.4rem; padding: 4px 18px; }
+            .day-route { font-size: 1.5rem; }
+            .sketch-grid { gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- 简洁页眉 -->
+    <div class="header">
+        <h1>山海·寻味 <strong>三日</strong></h1>
+        <div class="subhead">上海 → 嵊州 → 临海 → 温岭 → 奉化 → 返沪</div>
+        <div class="summary">
+            <div class="summary-item"><span class="summary-icon">🚙</span> 全程约900km</div>
+            <div class="summary-item"><span class="summary-icon">🍜</span> 嵊州小笼·海苔饼·泡虾·红膏蟹</div>
+            <div class="summary-item"><span class="summary-icon">🏨</span> 奈思酒店·家苑酒店</div>
+        </div>
+    </div>
+
+    <!-- DAY 1 -->
+    <div class="day-card">
+        <div class="day-title">
+            <span class="day-badge">DAY 1</span>
+            <span class="day-route">上海 <span>→</span> 嵊州 <span>→</span> 临海</span>
+        </div>
+        <div class="timeline">
+            <div class="timeline-row"><span class="time">08:00</span><span class="desc"><strong>上海出发</strong> G60沪昆→常台高速，至嵊州三江城停车场</span></div>
+            <div class="timeline-row"><span class="time">11:30</span><span class="desc"><strong>老袁炒年糕</strong> 嵊州小笼包+炒榨面/糟肉年糕 <span class="chip">富豪路</span></span></div>
+            <div class="timeline-row"><span class="time">13:00</span><span class="desc"><strong>金山村</strong> 远眺十九峰，买豆腐皮 <span class="parking-chip">村口免费停车</span></span></div>
+            <div class="timeline-row"><span class="time">14:30</span><span class="desc"><strong>Nice·奈思酒店</strong> 临海府城店，车程2h，免费停车</span></div>
+            <div class="timeline-row"><span class="time">17:00</span><span class="desc"><strong>紫阳街</strong> 王天顺海苔饼、蛋清羊尾</span></div>
+            <div class="timeline-row"><span class="time">18:30</span><span class="desc"><strong>台州府城墙</strong> 夜游，身份证登记观灯光秀</span></div>
+        </div>
+
+        <div class="sketch-grid">
+            <div class="sketch-card"><div class="sketch-emoji">🏯</div><div class="sketch-title">紫阳街</div><div class="sketch-desc">青石板·海苔饼</div></div>
+            <div class="sketch-card"><div class="sketch-emoji">🥟</div><div class="sketch-title">老袁炒年糕</div><div class="sketch-desc">小笼包·糟肉年糕</div></div>
+            <div class="sketch-card"><div class="sketch-emoji">⛰️</div><div class="sketch-title">十九峰</div><div class="sketch-desc">金山村远眺</div></div>
+            <div class="sketch-card"><div class="sketch-emoji">🏨</div><div class="sketch-title">奈思酒店</div><div class="sketch-desc">临海府城·免费停车</div></div>
+        </div>
+
+        <div class="location-bar">
+            <span class="loc-tag">📍嵊州三江城停车场</span>
+            <span class="loc-tag">📍金山村</span>
+            <span class="loc-tag">📍紫阳街/府城墙</span>
+        </div>
+    </div>
+
+    <!-- DAY 2 -->
+    <div class="day-card">
+        <div class="day-title">
+            <span class="day-badge">DAY 2</span>
+            <span class="day-route">临海 <span>→</span> 温岭 <span>→</span> 松门</span>
+        </div>
+        <div class="timeline">
+            <div class="timeline-row"><span class="time">08:00</span><span class="desc"><strong>老朱麦饼</strong> 打包梅干菜麦饼 <span class="chip">赤城路老店</span></span></div>
+            <div class="timeline-row"><span class="time">10:00</span><span class="desc"><strong>分组活动 · 温岭石塘</strong></span></div>
+        </div>
+
+        <div class="split-box">
+            <div class="split-a">
+                <h4>🥾 A线 · 徒步组 <span style="font-size:0.9rem;">(朱炜&朱清芸)</span></h4>
+                <p><strong>水桶岙环线</strong> 约3小时，海岸山脊，6km小环线。无补给，备足饮水。</p>
+            </div>
+            <div class="split-b">
+                <h4>📸 B线 · 观光组</h4>
+                <ul>
+                    <li><strong>对戒观景平台</strong> 30分钟，360°俯瞰山海</li>
+                    <li><strong>小箬村彩虹屋</strong> 1.5小时，七彩渔村</li>
+                    <li><strong>石塘渔港</strong> 渔舟唱晚</li>
+                </ul>
+                <p style="background:#ece2d5; border-radius:40px; padding:6px 16px; margin-top:12px;">🅿️ 各景点停车10-20元/次</p>
+            </div>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-row"><span class="time">15:30</span><span class="desc"><strong>家苑酒店(松门店)</strong> 车程40分钟，免费停车</span></div>
+            <div class="timeline-row"><span class="time">18:30</span><span class="desc"><strong>松门夜市</strong> 泡虾、鳗鱼羹 <span class="parking-chip">镇政府停车场19:00-22:00免费</span></span></div>
+        </div>
+
+        <div class="sketch-grid">
+            <div class="sketch-card"><div class="sketch-emoji">🌈</div><div class="sketch-title">小箬村</div><div class="sketch-desc">七彩石屋</div></div>
+            <div class="sketch-card"><div class="sketch-emoji">💍</div><div class="sketch-title">对戒平台</div><div class="sketch-desc">360°观景</div></div>
+            <div class="sketch-card"><div class="sketch-emoji">🥾</div><div class="sketch-title">水桶岙</div><div class="sketch-desc">海岸徒步</div></div>
+            <div class="sketch-card"><div class="sketch-emoji">🍤</div><div class="sketch-title">松门夜市</div><div class="sketch-desc">泡虾·鳗鱼羹</div></div>
+        </div>
+
+        <div class="location-bar">
+            <span class="loc-tag">📍对戒平台</span>
+            <span class="loc-tag">📍小箬村</span>
+            <span class="loc-tag">📍家苑酒店(松门)</span>
+        </div>
+    </div>
+
+    <!-- DAY 3 -->
+    <div class="day-card">
+        <div class="day-title">
+            <span class="day-badge">DAY 3</span>
+            <span class="day-route">松门 <span>→</span> 奉化 <span>→</span> 上海</span>
+        </div>
+        <div class="timeline">
+            <div class="timeline-row"><span class="time">07:00</span><span class="desc"><strong>松门水产市场</strong> 育英西路 <span class="parking-chip">市场东侧停车场5元/小时</span></span></div>
+            <div class="timeline-row"><span class="time">09:00</span><span class="desc"><strong>出发·奉化南岙村</strong> 车程2.5h，南岙村停车10元/次</span></div>
+            <div class="timeline-row"><span class="time">11:00</span><span class="desc"><strong>梅花谷</strong> 徒步15分钟至核心区，万亩梅林(2月中下旬盛花)</span></div>
+            <div class="timeline-row"><span class="time">12:30</span><span class="desc"><strong>莼湖菜市场</strong> 海鲜大排档：红膏炝蟹、芋艿头 <span class="parking-chip">地下停车场消费满100抵1h</span></span></div>
+            <div class="timeline-row"><span class="time">14:30</span><span class="desc"><strong>返程上海</strong> 沈海高速，避开杭州湾跨海大桥高峰</span></div>
+        </div>
+
+        <div class="sketch-grid">
+            <div class="sketch-card"><div class="sketch-emoji">🌸</div><div class="sketch-title">梅花谷</div><div class="sketch-desc">红梅漫山</div></div>
+            <div class="sketch-card"><div class="sketch-emoji">🦀</div><div class="sketch-title">莼湖海鲜</div><div class="sketch-desc">红膏炝蟹·芋艿头</div></div>
+            <div class="sketch-card"><div class="sketch-emoji">🏘️</div><div class="sketch-title">南岙村</div><div class="sketch-desc">长寿村</div></div>
+            <div class="sketch-card"><div class="sketch-emoji">🐟</div><div class="sketch-title">松门水产</div><div class="sketch-desc">鱼鲞·虾米</div></div>
+        </div>
+
+        <div class="location-bar">
+            <span class="loc-tag">📍南岙村/梅花谷</span>
+            <span class="loc-tag">📍莼湖菜市场</span>
+            <span class="loc-tag">📍松门水产市场</span>
+        </div>
+    </div>
+
+    <!-- 手机版备忘录 精简两列 -->
+    <div class="memo">
+        <h3>📋 行前备忘</h3>
+        <div class="memo-grid">
+            <span class="memo-item">嵊州三江城停车场</span>
+            <span class="memo-item">老朱麦饼赤城路店</span>
+            <span class="memo-item">紫阳街王天顺海苔饼</span>
+            <span class="memo-item">水桶岙两步路轨迹</span>
+            <span class="memo-item">小箬村傍晚亮灯</span>
+            <span class="memo-item">金山村避开晒豆区</span>
+            <span class="memo-item">梅花谷2月中下旬</span>
+            <span class="memo-item">古城灯光秀以现场为准</span>
+        </div>
+    </div>
+
+    <div class="footer">
+        📱 手机随身版 · 山海三日
+    </div>
+</div>
+</body>
+</html>
